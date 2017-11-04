@@ -13,10 +13,10 @@ namespace WebCrawlerTest
 {
     class Program
     {
-        private List<IHtmlDocument> _angleSharpParsedHTML = new List<IHtmlDocument>();
+        // private List<IHtmlDocument> _angleSharpParsedHTML = new List<IHtmlDocument>();
         private List<HtmlDocument> _agiliyParsedHTML = new List<HtmlDocument>();
-        private string url = "https://www.totalrent.dk/shop/tina-rengoeringsvogn-ergo-1546p.html";
-        private string domain = "https://www.totalrent.dk/";
+        private string uri = "https://www.totalrent.dk/shop/";
+        private string domain = "https://www.totalrent.dk";
         static void Main(string[] args)
         {
             new Program().Run();
@@ -29,9 +29,8 @@ namespace WebCrawlerTest
             IWebCrawler crawler;
             Console.WriteLine("Start crawling");
             Console.ReadLine();
-            Uri uriToCrawl = new Uri(url);
+            Uri uriToCrawl = new Uri(uri);
             crawler = GetManuallyConfiguredWebCrawler();
-            //Subscribe to any of these asynchronous events, there are also sychronous versions of each.
             //This is where you process data about specific events of the crawl
             crawler.PageCrawlStartingAsync += Crawler_ProcessPageCrawlStarting;
             crawler.PageCrawlCompletedAsync += Crawler_ProcessPageCrawlCompleted;
@@ -42,9 +41,9 @@ namespace WebCrawlerTest
             
             Console.WriteLine("Time Elapsed: " + result.Elapsed);
             Console.Write(Environment.NewLine + Environment.NewLine);
-            foreach(var page in _agiliyParsedHTML)
+            
+            foreach (var page in _agiliyParsedHTML)
             {
-           
                 foreach (HtmlNode node in page.DocumentNode.SelectNodes("//div[@class='col-sm-9 content']")){ 
                     string name = node
                     .SelectNodes("//span[@itemprop='name']")
@@ -69,13 +68,12 @@ namespace WebCrawlerTest
                     Console.Clear();
                     Console.WriteLine($"Product ID: {productid}");
                     Console.WriteLine($"Name: {name}");
-                    Console.WriteLine($"Description: {name}");
+                    Console.WriteLine($"Description: {description}");
                     Console.WriteLine($"Price: {price}");
                     Console.WriteLine($"Img URL: {domain +imgurl}");
                 }
             }
             Console.ReadLine();
-            
         }
 
         private static IWebCrawler GetDefaultWebCrawler()
@@ -108,7 +106,7 @@ namespace WebCrawlerTest
 
             crawler.ShouldCrawlPage((pageToCrawl, crawlContext) =>
             {
-                if (pageToCrawl.Uri.AbsoluteUri.Contains("/evil/"))
+                if (pageToCrawl.Uri.AbsoluteUri.Contains("p.html") || pageToCrawl.Uri.AbsoluteUri.Contains("p.html"))
                     return new CrawlDecision { Allow = true };
 
                 return new CrawlDecision { Allow = false, Reason = "Incorrect subdomain" };
@@ -132,10 +130,6 @@ namespace WebCrawlerTest
             });
 
             return crawler;
-        }
-        private static void PrintDisclaimer()
-        {
-            PrintAttentionText("The demo is configured to only crawl a total of 10 pages and will wait 1 second in between http requests. This is to avoid getting you blocked by your isp or the sites you are trying to crawl. You can change these values in the app.config or Abot.Console.exe.config file.");
         }
 
         private static void PrintAttentionText(string text)
@@ -165,7 +159,7 @@ namespace WebCrawlerTest
 
             _agiliyParsedHTML.Add(crawledPage.HtmlDocument); //Html Agility Pack parser
 
-            _angleSharpParsedHTML.Add(crawledPage.AngleSharpHtmlDocument); //AngleSharp parser
+            //_angleSharpParsedHTML.Add(crawledPage.AngleSharpHtmlDocument); //AngleSharp parser
         }
 
         void Crawler_PageLinksCrawlDisallowed(object sender, PageLinksCrawlDisallowedArgs e)
