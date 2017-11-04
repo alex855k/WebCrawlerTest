@@ -135,9 +135,9 @@ namespace WebCrawlerTest
         private static void PrintAttentionText(string text)
         {
             ConsoleColor originalColor = System.Console.ForegroundColor;
-            System.Console.ForegroundColor = ConsoleColor.Yellow;
-            System.Console.WriteLine(text);
-            System.Console.ForegroundColor = originalColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(text);
+            Console.ForegroundColor = originalColor;
         }
 
         void Crawler_ProcessPageCrawlStarting(object sender, PageCrawlStartingArgs e)
